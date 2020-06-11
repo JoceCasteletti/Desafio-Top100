@@ -1,0 +1,150 @@
+
+Jocelyn Casteletti
+
+
+1. Crear base de datos llamada películas
+
+----Crear tabla `pelicula`----
+
+CREATE TABLE `pelicula` (
+  `id` int NOT NULL PRIMARY KEY,
+  `titulo` varchar(100) NOT NULL,
+  `fecha_estreno` int(4) NOT NULL,
+  `director` varchar(100) NOT NULL
+);
+
+
+
+----Insertar datos en tabla `pelicula`----
+
+INSERT INTO `pelicula` (`id`, `titulo`, `anno_Estreno`, `director`) VALUES
+(1, 'Forest Gump', 1994, 'Robert Zemeckis'),
+(2, 'Titanic', 1997, 'James Cameron'),
+(3, 'El Padrino', 1972, 'Francis Ford Coppola'),
+(4, 'Gladiator', 2000, 'Ridley Scott'),
+(5, 'El Se?or de los anillos: El retorno del rey', 2003, 'Peter Jackson'),
+(6, 'El caballero oscuro', 2008, 'Christopher Nolan'),
+(7, 'Cadena perpetua', 1994, 'Frank Darabont'),
+(8, 'Piratas del Caribe: La maldici?n de la Perla Negra', 2003, 'Gore Verbinski'),
+(9, 'Braveheart', 1995, 'Mel Gibson'),
+(10, 'La lista de Schindler', 1993, 'Steven Spielberg')........
+
+
+2. Revisar los archivos peliculas.csv y reparto.csv para crear las tablas correspondientes,
+determinando la relación entre ambas tablas
+
+----Crear tabla `reparto`----
+
+CREATE TABLE reparto(
+  id_pelicula int NOT null,
+  actores varchar(100),
+  CONSTRAINT FK_peliculas_id FOREIGN KEY(id_pelicula) REFERENCES pelicula(id)
+);
+
+
+
+3. Cargar ambos archivos a su tabla correspondiente
+
+----Insertar datos en tabla `reparto`----
+
+INSERT INTO `reparto` (`id_pelicula`, `actores`) VALUES
+(1, 'Robin Wright Penn\r'),
+(1, 'Gary Sinise\r'),
+(1, 'Mykelti Williamson\r'),
+(1, 'Sally Field\r'),
+(1, 'Rebecca Williams\r'),
+(1, 'Michael Conner Humphreys\r'),
+(1, 'Harold G. Herthum\r'),
+(1, 'Haley Joel Osment\r'),
+(1, 'George Kelly\r'),
+(1, 'Bob Penny\r'),
+(1, 'John Randall\r'),
+(1, 'Sam Anderson\r'),
+(1, 'Margo Moorer\r'),
+(1, 'Ione M. Telech\r'),
+(1, 'Christine Seabrook\r'),
+(2, 'Leonardo DiCaprio\r'),
+(2, 'Kate Winslet\r'),
+(2, 'Billy Zane\r'),
+(2, 'Kathy Bates\r'),
+(2, 'Frances Fisher\r'),
+(2, 'Bernard Hill\r'),
+(2, 'Jonathan Hyde\r'),
+(2, 'Danny Nucci\r'),
+(2, 'David Warner\r'),
+(2, 'Bill Paxton\r'),
+(2, 'Gloria Stuart\r'),
+(2, 'Victor Garber\r'),
+(2, 'Suzy Amis\r')......
+
+
+
+4. Listar todos los actores que aparecen en la película "Titanic", indicando el título de la película,
+año de estreno, director y todo el reparto.
+
+----Filtrar por pelicula 'Titanic'----
+
+SELECT * FROM pelicula AS p
+INNER JOIN reparto AS r
+ON p.id = r.id_pelicula
+WHERE p.titulo = 'Titanic'
+
+
+
+5. Listar los titulos de las películas donde actúe Harrison Ford.
+
+----Filtrar por titulos de peliculas de Harrison Ford----
+SELECT actores, titulo  FROM `pelicula` AS p INNER JOIN reparto AS r ON p.id = r.id_pelicula WHERE actores like '%Harrison ford%';
+
+
+
+6. Listar los 10 directores más populares, indicando su nombre y cuántas películas aparecen en el
+top 100.
+
+----Filtrar por 10 directores mas populares----
+
+SELECT director, COUNT(*) AS top_directores FROM `pelicula` 
+GROUP BY director 
+ORDER BY top_directores desc LIMIT 10;
+
+
+
+7. Indicar cuantos actores distintos hay.
+
+ ----Cantidad de actores----
+
+SELECT COUNT(DISTINCT actores) AS cantidad_actores FROM reparto
+
+
+
+8. Indicar las películas estrenadas entre los años 1990 y 1999 (ambos incluidos) ordenadas por
+título de manera ascendente.
+
+----peliculas entre 1990 y 1999----
+
+select * FROM pelicula 
+WHERE fecha_estreno 
+between 1990 and 1999 ORDER by titulo ASC;
+
+
+
+9. Listar el reparto de las películas lanzadas el año 2001 .
+
+----peliculas en año 2001----
+
+SELECT * FROM pelicula AS p
+INNER JOIN reparto AS r
+ON p.id = r.id_pelicula
+WHERE p.fecha_estreno = '2001';
+
+
+
+
+10. Listar los actores de la película más nueva .
+
+
+---Actores de pelicula reciente----
+
+SELECT actores, MAX(fecha_estreno), titulo FROM reparto INNER JOIN pelicula on id_pelicula = id;
+
+
